@@ -148,8 +148,13 @@
     >
       <div class="nav-container">
         <a href="#" class="logo" aria-label="João Vitor - Home">João Vitor</a>
-        <div style="display: flex; align-items: center; gap: 2rem">
-          <ul class="nav-menu">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-wrapper">
+        <ul class="nav-menu">
             <li>
               <a
                 href="#sobre"
@@ -195,7 +200,7 @@
                 >Contato</a
               >
             </li>
-          </ul>
+        </ul>
           <div
             class="language-toggle"
             id="languageToggle"
@@ -206,6 +211,7 @@
             <span data-lang="pt" aria-label="Português">PT</span>
             <span class="active" data-lang="en" aria-label="English">EN</span>
           </div>
+        </div>
         </div>
       </div>
     </nav>

@@ -260,6 +260,43 @@ function initLanguageToggle() {
   loadSavedLanguage();
 }
 
+function initMobileMenu() {
+  const menuToggle = document.getElementById("menuToggle");
+  const navWrapper = document.querySelector(".nav-wrapper");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  function toggleMenu() {
+    menuToggle.classList.toggle("active");
+    navWrapper.classList.toggle("active");
+
+    if (navWrapper.classList.contains("active")) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }
+
+  function closeMenu() {
+    menuToggle.classList.remove("active");
+    navWrapper.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  if (menuToggle && navWrapper) {
+    menuToggle.addEventListener("click", toggleMenu);
+
+    navLinks.forEach(function (link) {
+      link.addEventListener("click", closeMenu);
+    });
+
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 768) {
+        closeMenu();
+      }
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initSmoothScroll();
   initNavbarScroll();
@@ -269,6 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initScrollAnimations();
   initNavbarActive();
   initLanguageToggle();
+  initMobileMenu();
 
   AOS.init({
     duration: 1000,
