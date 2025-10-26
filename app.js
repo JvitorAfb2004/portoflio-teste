@@ -92,6 +92,7 @@ function initIntersectionObserver() {
 function initFormValidation() {
   const form = document.getElementById("contatoForm");
   const formMessage = document.getElementById("formMessage");
+  const currentLang = localStorage.getItem("language") || "en";
 
   function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -115,22 +116,46 @@ function initFormValidation() {
     const mensagem = document.getElementById("mensagem").value.trim();
 
     if (!nome || !email || !mensagem) {
-      showMessage("Por favor, preencha todos os campos.", "error");
+      const msgPt = "Por favor, preencha todos os campos.";
+      const msgEn = "Please fill in all fields.";
+      showMessage(currentLang === "pt" ? msgPt : msgEn, "error");
       return;
     }
 
     if (!validateEmail(email)) {
-      showMessage("Por favor, insira um email válido.", "error");
+      const msgPt = "Por favor, insira um email válido.";
+      const msgEn = "Please enter a valid email.";
+      showMessage(currentLang === "pt" ? msgPt : msgEn, "error");
       return;
     }
 
-    setTimeout(function () {
-      showMessage(
-        "Mensagem enviada com sucesso! Entrarei em contato em breve.",
-        "success"
-      );
-      form.reset();
-    }, 500);
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        if (response.ok) {
+          const msgPt =
+            "Mensagem enviada com sucesso! Entrarei em contato em breve.";
+          const msgEn = "Message sent successfully! I'll contact you soon.";
+          showMessage(currentLang === "pt" ? msgPt : msgEn, "success");
+          form.reset();
+        } else {
+          const msgPt = "Erro ao enviar mensagem. Tente novamente.";
+          const msgEn = "Error sending message. Please try again.";
+          showMessage(currentLang === "pt" ? msgPt : msgEn, "error");
+        }
+      })
+      .catch(function (error) {
+        const msgPt = "Erro ao enviar mensagem. Tente novamente.";
+        const msgEn = "Error sending message. Please try again.";
+        showMessage(currentLang === "pt" ? msgPt : msgEn, "error");
+      });
   }
 
   form.addEventListener("submit", handleSubmit);
@@ -196,6 +221,45 @@ function initNavbarActive() {
   updateActiveNav();
 }
 
+function initLanguageToggle() {
+  const languageToggle = document.getElementById("languageToggle");
+  const ptButton = languageToggle.querySelector('[data-lang="pt"]');
+  const enButton = languageToggle.querySelector('[data-lang="en"]');
+
+  function setLanguage(lang) {
+    localStorage.setItem("language", lang);
+
+    const elementsToUpdate = document.querySelectorAll(
+      "[data-lang-pt][data-lang-en]"
+    );
+    elementsToUpdate.forEach(function (element) {
+      const textPt = element.getAttribute("data-lang-pt");
+      const textEn = element.getAttribute("data-lang-en");
+      element.textContent = lang === "pt" ? textPt : textEn;
+    });
+
+    document.documentElement.setAttribute("data-lang", lang);
+
+    ptButton.classList.toggle("active", lang === "pt");
+    enButton.classList.toggle("active", lang === "en");
+  }
+
+  function loadSavedLanguage() {
+    const savedLang = localStorage.getItem("language") || "en";
+    setLanguage(savedLang);
+  }
+
+  ptButton.addEventListener("click", function () {
+    setLanguage("pt");
+  });
+
+  enButton.addEventListener("click", function () {
+    setLanguage("en");
+  });
+
+  loadSavedLanguage();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initSmoothScroll();
   initNavbarScroll();
@@ -204,6 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initFormValidation();
   initScrollAnimations();
   initNavbarActive();
+  initLanguageToggle();
 
   AOS.init({
     duration: 1000,
