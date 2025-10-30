@@ -509,6 +509,33 @@ section {
   transform: translateY(-2px);
 }
 
+/* Tech Cards (stack agrupada) */
+.tech-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.tech-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.tech-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px var(--shadow);
+}
+
+.tech-card h4 {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
 .projetos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
