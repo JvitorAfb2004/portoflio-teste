@@ -15,13 +15,102 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("assets/SF-Pro-Display-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("assets/SF-Pro-Display-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("assets/SF-Pro-Display-Black.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
+  position: relative;
+}
+
+body.custom-cursor-active {
+  cursor: none;
+}
+
+.background-aurora {
+  position: fixed;
+  inset: -40%;
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(92, 58, 180, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(24, 154, 180, 0.35),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(255, 99, 72, 0.25),
+      transparent 50%
+    );
+  filter: blur(160px);
+  opacity: 0.45;
+  animation: auroraMove 30s ease-in-out infinite alternate;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease,
+    background 0.4s ease;
+  z-index: 2000;
+  opacity: 0;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+.custom-cursor.visible {
+  opacity: 1;
+}
+
+.custom-cursor.active {
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 0 45px rgba(255, 255, 255, 0.6);
+}
+
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none;
+  }
 }
 
 /* Custom Scrollbar */
@@ -48,6 +137,18 @@ body {
   scrollbar-color: var(--bg-secondary) var(--bg-primary);
 }
 
+@keyframes auroraMove {
+  0% {
+    transform: translate3d(-5%, -5%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(5%, 8%, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-3%, 4%, 0) scale(1.05);
+  }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -72,6 +173,21 @@ body {
   box-shadow: 0 4px 20px var(--shadow);
 }
 
+.scroll-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), #ffffff);
+  transition: width 0.15s ease-out, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.navbar.scrolled .scroll-progress {
+  opacity: 1;
+}
+
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -83,7 +199,7 @@ body {
 }
 
 .logo {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.5px;
@@ -290,14 +406,14 @@ body {
 }
 
 .title-line {
-  font-size: 1.75rem;
+  font-size: 2rem;
   color: var(--text-secondary);
   font-weight: 300;
   letter-spacing: 1px;
 }
 
 .title-name {
-  font-size: 6rem;
+  font-size: 6.5rem;
   font-weight: 800;
   letter-spacing: -2px;
   background: linear-gradient(
@@ -343,7 +459,7 @@ body {
 }
 
 .title-role {
-  font-size: 2rem;
+  font-size: 2.25rem;
   color: var(--accent);
   font-weight: 600;
   letter-spacing: 1px;
@@ -351,7 +467,7 @@ body {
 }
 
 .hero-description {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto 2rem;
@@ -451,8 +567,8 @@ section {
 }
 
 .section-title {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 3.25rem;
+  font-weight: 800;
   margin-bottom: 3rem;
   text-align: center;
   position: relative;
@@ -476,14 +592,14 @@ section {
 }
 
 .sobre-text {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   margin-bottom: 3rem;
   line-height: 1.8;
 }
 
 .tech-stack h3 {
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   margin-bottom: 1.5rem;
   color: var(--accent);
 }
@@ -499,7 +615,7 @@ section {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 25px;
-  font-size: 0.875rem;
+  font-size: 0.95rem;
   transition: var(--transition);
 }
 
@@ -531,7 +647,7 @@ section {
 }
 
 .tech-card h4 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   margin-bottom: 1rem;
   color: var(--text-primary);
 }
@@ -589,7 +705,7 @@ section {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
@@ -802,6 +918,52 @@ section {
   opacity: 0.7;
 }
 
+.back-to-top {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(10, 10, 10, 0.85);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 30px var(--shadow);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease,
+    border-color 0.3s ease;
+  z-index: 1200;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.back-to-top:active {
+  transform: translateY(0);
+}
+
+.back-to-top-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: currentColor;
+}
+
 .educacao-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -837,20 +999,20 @@ section {
 }
 
 .educacao-card h3 {
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   margin-bottom: 1rem;
   color: var(--accent);
 }
 
 .educacao-card h4 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
 
 .educacao-card p {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.95rem;
   margin-bottom: 0.25rem;
 }
 
@@ -858,7 +1020,7 @@ section {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   margin-top: 0.5rem;
 }
@@ -896,7 +1058,7 @@ section {
 }
 
 .stat-number {
-  font-size: 3rem;
+  font-size: 3.25rem;
   font-weight: 800;
   background: linear-gradient(
     135deg,
@@ -911,7 +1073,7 @@ section {
 
 .stat-label {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.95rem;
   font-weight: 500;
 }
 
@@ -946,18 +1108,18 @@ section {
   border-radius: 25px;
   color: var(--accent);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 
 .depoimento-title {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   margin-bottom: 1rem;
   color: var(--text-primary);
   padding-right: 4rem;
 }
 
 .depoimento-text {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 1.5rem;
@@ -965,14 +1127,14 @@ section {
 }
 
 .depoimento-author {
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   color: var(--accent);
   margin-bottom: 0.25rem;
 }
 
 .depoimento-role {
-  font-size: 0.875rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
 }
 
@@ -1046,23 +1208,23 @@ section {
   }
 
   .title-line {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
   }
 
   .title-name {
-    font-size: 3.5rem;
+    font-size: 3.9rem;
   }
 
   .title-role {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
   }
 
   .hero-description {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .section-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
   .contato-content {

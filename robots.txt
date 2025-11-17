@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://www.jvitor.tech/sitemap.xml
+Sitemap: https://www.joaovitorafb.site/sitemap.xml
 
 # Disallow specific paths (if needed in the future)
 # Disallow: /admin

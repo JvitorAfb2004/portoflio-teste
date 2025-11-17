@@ -24,10 +24,21 @@ function initSmoothScroll() {
 
 function initNavbarScroll() {
   const navbar = document.getElementById("navbar");
+  const scrollProgress = document.getElementById("scrollProgress");
   let lastScroll = 0;
 
   function handleScroll() {
     const currentScroll = window.pageYOffset;
+    const docHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+
+    if (scrollProgress && docHeight > 0) {
+      const progress = Math.min(
+        100,
+        Math.max(0, (currentScroll / docHeight) * 100)
+      );
+      scrollProgress.style.width = progress + "%";
+    }
 
     if (currentScroll > 100) {
       navbar.classList.add("scrolled");
@@ -297,6 +308,91 @@ function initMobileMenu() {
   }
 }
 
+function initCustomCursor() {
+  const cursor = document.querySelector(".custom-cursor");
+
+  if (!cursor) {
+    return;
+  }
+
+  const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  if (prefersCoarsePointer) {
+    cursor.style.display = "none";
+    return;
+  }
+
+  document.body.classList.add("custom-cursor-active");
+
+  let currentX = window.innerWidth / 2;
+  let currentY = window.innerHeight / 2;
+  let targetX = currentX;
+  let targetY = currentY;
+
+  function renderCursor() {
+    currentX += (targetX - currentX) * 0.15;
+    currentY += (targetY - currentY) * 0.15;
+    cursor.style.left = currentX + "px";
+    cursor.style.top = currentY + "px";
+    window.requestAnimationFrame(renderCursor);
+  }
+
+  function handleMouseMove(event) {
+    targetX = event.clientX;
+    targetY = event.clientY;
+    cursor.classList.add("visible");
+  }
+
+  function handleMouseDown() {
+    cursor.classList.add("active");
+  }
+
+  function handleMouseUp() {
+    cursor.classList.remove("active");
+  }
+
+  function handleMouseLeave() {
+    cursor.classList.remove("visible");
+  }
+
+  document.addEventListener("mousemove", handleMouseMove);
+  document.addEventListener("mousedown", handleMouseDown);
+  document.addEventListener("mouseup", handleMouseUp);
+  document.addEventListener("mouseleave", handleMouseLeave);
+
+  renderCursor();
+}
+
+function initBackToTop() {
+  const backToTop = document.getElementById("backToTop");
+
+  if (!backToTop) {
+    return;
+  }
+
+  function handleScroll() {
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const docHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+    const distanceToBottom = docHeight - scrollY;
+
+    if (scrollY > window.innerHeight && distanceToBottom < 800) {
+      backToTop.classList.add("visible");
+    } else {
+      backToTop.classList.remove("visible");
+    }
+  }
+
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  backToTop.addEventListener("click", scrollToTop);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initSmoothScroll();
   initNavbarScroll();
@@ -307,6 +403,8 @@ document.addEventListener("DOMContentLoaded", function () {
   initNavbarActive();
   initLanguageToggle();
   initMobileMenu();
+  initCustomCursor();
+  initBackToTop();
 
   AOS.init({
     duration: 1000,
